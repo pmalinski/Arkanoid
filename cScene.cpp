@@ -1,14 +1,16 @@
-#include"cScene.h"
 #include<GL/glut.h>
 #include<vector>
+#include"cScene.h"
 #include"cRectangle.h"
 #include"cOkrag.h"
+#include"cFizyka.h"
 #include<iostream>
 
 using namespace std;
 
 #define NDEBUG
 
+extern int Time;
 cScene scena;
 vector<cFigura*> figury;
 
@@ -21,17 +23,18 @@ void init() //inicjalizacja obiektow
 	o->setPredkosc(3e-2, 60);
 	figury.push_back(o);
 
-	float grubosc_scianek = 3;
-	figury.push_back(new cRectangle(40, grubosc_scianek, 0, -19.5));
-	figury.push_back(new cRectangle(40, grubosc_scianek, 0, 19.5));
-	figury.push_back(new cRectangle(grubosc_scianek, 40, -19.5, 0));
-	figury.push_back(new cRectangle(grubosc_scianek, 40, 19.5, 0));
+	float grubosc = 4;
+	float srodki = 19;
+	float dlugosc = grubosc + srodki * 2;
+	figury.push_back(new cRectangle(dlugosc, grubosc, 0, -srodki));
+	figury.push_back(new cRectangle(dlugosc, grubosc, 0, srodki));
+	figury.push_back(new cRectangle(grubosc, dlugosc, -srodki, 0));
+	figury.push_back(new cRectangle(grubosc, dlugosc, srodki, 0));
 }
 void idle()
 {
 	scena.aktualizuj();
 	glutPostRedisplay();
-
 	Sleep(1);
 }
 void key(unsigned char key, int x, int y)
@@ -132,6 +135,17 @@ void SetCallbackFunctions()
 	//glutMouseFunc(mouse_button);
 	//glutMotionFunc(mouse_motion);
 }
+inline void aktualizuj_czas(int &czas)
+{
+	if (!(glutGet(GLUT_ELAPSED_TIME) % 1))
+	{
+		czas += 1;
+	}
+	if (czas >= 2000000000)
+	{
+		czas = 0;
+	}
+}
 
 //################################################################################# METODY KLASY #################################################################################
 void cScene::init_scene(int &argc, char* argv)
@@ -155,10 +169,12 @@ void cScene::rysuj()
 void cScene::aktualizuj()
 {
 	int ilosc_figur = figury.size();
-	int czas = GetTickCount(); //zwraca czas w [ms]
+	//int czas = GetTickCount(); //zwraca czas w [ms]
+	aktualizuj_czas(Time);
 	for (int i = 0; i < ilosc_figur; i++)
 	{
-		figury[i]->Aktualizuj(czas); //obliczanie nowych polozen
+		//figury[i]->Aktualizuj(czas); //obliczanie nowych polozen
+		figury[i]->Aktualizuj(Time);
 	}
 	//wykrywanie kolizji
 	for (int i = 0; i < ilosc_figur; i++)

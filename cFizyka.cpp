@@ -3,6 +3,8 @@
 #include "cFizyka.h"
 //odbicie tylko w plaszczyznie xy pamietac, najwazniejsze to jest ta kolizja!
 
+int Time = 0;
+
 CFizyka::CFizyka()
 {
 	//obiekt staly
@@ -159,5 +161,6 @@ float CFizyka::ZnajdzNormalna(const CFizyka& X)//znajduje normalna boku ktory je
 
 void CFizyka::Reset() //resetuje czas
 {
-	czas = GetTickCount();
+	czas = Time;
+	//czas = GetTickCount();
 }
