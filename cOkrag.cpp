@@ -5,17 +5,17 @@
 const float pi = 3.14159265358979323F;
 cOkrag::cOkrag() :m_promien(0.5)
 {
-	setGeometria(x, y, -m_promien, -m_promien, m_promien, m_promien);
+	ustaw_wlasciwosci();
 }
 cOkrag::cOkrag(float promien) : m_promien(promien)
 {
-	setGeometria(x, y, -m_promien, -m_promien, m_promien, m_promien);
+	ustaw_wlasciwosci();
 }
 cOkrag::cOkrag(float promien, float _x, float _y) : m_promien(promien)
 {
 	x = _x;
 	y = _y;
-	setGeometria(x, y, -m_promien, -m_promien, m_promien, m_promien);
+	ustaw_wlasciwosci();
 }
 void cOkrag::rysuj()
 {
@@ -46,4 +46,10 @@ void cOkrag::resize(float dwidth, float dheight) //metoda zmieniajaca rozmiar ok
 	{
 		m_promien += dheight;
 	}
+}
+void cOkrag::ustaw_wlasciwosci()
+{
+	setGeometria(x, y, -m_promien, -m_promien, m_promien, m_promien);
+	setFizyka(9.811E-6F, -90);
+	setPredkosc(4e-2F, 60);
 }

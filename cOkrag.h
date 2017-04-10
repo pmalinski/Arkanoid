@@ -14,6 +14,8 @@ public:
 	cOkrag(float promien, float _x, float _y);
 	virtual void rysuj();
 	virtual void resize(float dwidth, float dheight = 0); //metoda zmieniajaca rozmiar okregu
+	void ustaw_wlasciwosci();
 };
+
 
 #endif

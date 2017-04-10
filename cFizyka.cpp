@@ -1,9 +1,8 @@
 #include <windows.h>
 #include <math.h>
 #include "cFizyka.h"
+#include <GL/freeglut.h>
 //odbicie tylko w plaszczyznie xy pamietac, najwazniejsze to jest ta kolizja!
-
-int Time = 0;
 
 CFizyka::CFizyka()
 {
@@ -38,7 +37,8 @@ void CFizyka::Odbicie(float alfa_n) //odbicie od sciany charakteryzowanej za pom
 void CFizyka::Aktualizuj(int czas_aktualny) //zmienia polozenie obiektu na podstawie aktualnego czasu
 {
 
-	float delta_t = czas_aktualny - czas, v_x, v_y;
+	int delta_t = czas_aktualny - czas;
+	float v_x, v_y;
 	if (delta_t > 1000) delta_t = 100;//dla przerwy dluzszej niz 1s nie przeprowadzana jest aktualizacja
 	v_x = v*cos(alfa_v / 180.0*PI);
 	v_y = v*sin(alfa_v / 180.0*PI);
@@ -161,6 +161,6 @@ float CFizyka::ZnajdzNormalna(const CFizyka& X)//znajduje normalna boku ktory je
 
 void CFizyka::Reset() //resetuje czas
 {
-	czas = Time;
+	czas = glutGet(GLUT_ELAPSED_TIME);
 	//czas = GetTickCount();
 }

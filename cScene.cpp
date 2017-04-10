@@ -1,19 +1,18 @@
-#include<GL/glut.h>
+ï»¿#include<GL/freeglut.h>
 #include<vector>
 #include"cScene.h"
 #include"cRectangle.h"
 #include"cOkrag.h"
 #include"cFizyka.h"
+#include"cKlocek.h"
 #include<iostream>
 
 using namespace std;
 
 #define NDEBUG
 
-extern int Time;
 cScene scena;
 vector<cFigura*> figury;
-vector<cFigura*> kulki;
 
 //################################################################################# FUNKCJE GLUT #################################################################################
 
@@ -21,20 +20,7 @@ void init() //inicjalizacja obiektow
 {
 	figury.push_back(new cRectangle(6, 1, 0, -16));//paletka
 
-	cOkrag *o = new cOkrag(0.5, 0, 0);
-	o->setFizyka(9.811E-6F, -90);
-	o->setPredkosc(3e-2F, 60);
-	kulki.push_back(o);
-
-	cOkrag *o2 = new cOkrag(0.5, 1, 0);
-	o2->setFizyka(9.811E-6F, -90);
-	o2->setPredkosc(6e-2F, 120);
-	kulki.push_back(o2);
-
-	cOkrag *o3 = new cOkrag(0.5, 0, 0);
-	o3->setFizyka(9.811E-6F, -90);
-	o3->setPredkosc(4.5e-2F, 70);
-	kulki.push_back(o3);
+	figury.push_back(new cOkrag(0.5, 0, 0));
 
 	float grubosc = 4;
 	float srodki = 19;
@@ -43,12 +29,13 @@ void init() //inicjalizacja obiektow
 	figury.push_back(new cRectangle(dlugosc, grubosc, 0, srodki));
 	figury.push_back(new cRectangle(grubosc, dlugosc, -srodki, 0));
 	figury.push_back(new cRectangle(grubosc, dlugosc, srodki, 0));
+	figury.push_back(new cKlocek);
 }
 void idle()
 {
 	scena.aktualizuj();
 	glutPostRedisplay();
-	//Sleep(1);
+	Sleep(1);
 }
 void key(unsigned char key, int x, int y)
 {
@@ -57,24 +44,24 @@ void key(unsigned char key, int x, int y)
 	{
 	case'p':
 	{
-			   system("pause");
-			   break;
+		system("pause");
+		break;
 	}
 	case'a':
 	{
-			   if (!(paletka->Kolizja(*figury[3])))
-				   figury[0]->move(-2, 0);
-			   break;
+		if (!(paletka->Kolizja(*figury[4])))
+			figury[0]->move(-2, 0);
+		break;
 	}
 	case'd':
 	{
-			   if (!(paletka->Kolizja(*figury[4])))
-				   figury[0]->move(2, 0);
-			   break;
+		if (!(paletka->Kolizja(*figury[5])))
+			figury[0]->move(2, 0);
+		break;
 	}
 	case 27:
 	{
-			   exit(0);
+		exit(0);
 	}
 	}
 }
@@ -112,7 +99,7 @@ void mouse_button(int button, int state, int x, int y)
 	}
 	if (button == GLUT_LEFT && state == GLUT_UP)
 	{
-	
+
 	}
 }
 void mouse_motion(int x, int y)
@@ -124,11 +111,11 @@ void mouse_motion(int x, int y)
 	//float y_p = paletka->ZwracajY();
 	float delta_x = x_p - x_p2;
 
-	if (!(paletka->Kolizja(*figury[3])) && delta_x < 0)
+	if (!(paletka->Kolizja(*figury[4])) && delta_x < 0)
 	{
 		paletka->move(delta_x, 0);
 	}
-	if (!(paletka->Kolizja(*figury[4])) && delta_x > 0)
+	if (!(paletka->Kolizja(*figury[5])) && delta_x > 0)
 	{
 		paletka->move(delta_x, 0);
 	}
@@ -176,11 +163,6 @@ void SetCallbackFunctions()
 	glutMouseFunc(mouse_button);
 	glutPassiveMotionFunc(mouse_motion);
 }
-inline void aktualizuj_czas(int &czas)
-{
-	if (!(glutGet(GLUT_ELAPSED_TIME) % 1)) czas++;
-	if (czas >= 2000000000) czas = 0;
-}
 
 //################################################################################# METODY KLASY #################################################################################
 void cScene::init_scene(int &argc, char* argv)
@@ -197,11 +179,8 @@ void cScene::rysuj()
 
 	for (auto fig : figury)
 	{
-		fig->rysuj();
-	}
-	for (auto kul : kulki)
-	{
-		kul->rysuj();
+		if (fig->ZwracajWidoczny())
+			fig->rysuj();
 	}
 	glPopMatrix();
 }
@@ -209,27 +188,28 @@ void cScene::aktualizuj()
 {
 	int ilosc_figur = figury.size();
 	//int czas = GetTickCount(); //zwraca czas w [ms]
-	aktualizuj_czas(Time);
-	for (int i = 0; i < ilosc_figur; i++) //aktualizacja figur
+	int czas = glutGet(GLUT_ELAPSED_TIME);
+	for (int i = 0; i < ilosc_figur; i++)
 	{
-		figury[i]->Aktualizuj(Time);
-	}
-	for (int i = 0; i < kulki.size(); i++) //aktualizacja kulek
-	{
-		kulki[i]->Aktualizuj(Time);
+		figury[i]->Aktualizuj(czas); //obliczanie nowych polozen
 	}
 	//wykrywanie kolizji
-	for (int i = 0; i < kulki.size(); i++)
+	for (int i = 0; i < ilosc_figur; i++)
 	{
-		for (int k = 0; k < kulki.size(); k++)
+		for (int j = i + 1; j < ilosc_figur; j++)
 		{
-			if (k != i)
-				kulki[i]->Kolizja(*kulki[k]);
-		}
-		for (int j = 0; j < ilosc_figur; j++)
-		if (kulki[i]->Kolizja(*figury[j])) //znajduje kolizje
-		{
-			//tu mozna zareagowac na kolizje np. usuwajac „zbity” obiekt itp...
+			cKlocek *k = dynamic_cast<cKlocek*>(figury[i]);
+			if (k != NULL)
+			{
+				if (k->Kolizja(*figury[j]))
+				{
+					//reakcja na uderzenie klocka
+				}
+			}
+			else if (figury[i]->Kolizja(*figury[j])) //znajduje kolizje
+			{
+				//reakcja na uderzenie figury
+			}
 		}
 	}
 }
