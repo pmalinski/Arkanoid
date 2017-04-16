@@ -1,17 +1,18 @@
 #include"cOkrag.h"
 #include<GL/freeglut.h>
 #include<cmath>
+#include<cstdlib>
 
 const float pi = 3.14159265358979323F;
-cOkrag::cOkrag() :m_promien(0.5)
+cOkrag::cOkrag() :m_promien(0.5), przylepiony(0), odleglosc_na_paletce(0)
 {
 	ustaw_wlasciwosci();
 }
-cOkrag::cOkrag(float promien) : m_promien(promien)
+cOkrag::cOkrag(float promien) : m_promien(promien), przylepiony(0), odleglosc_na_paletce(0)
 {
 	ustaw_wlasciwosci();
 }
-cOkrag::cOkrag(float promien, float _x, float _y) : m_promien(promien)
+cOkrag::cOkrag(float promien, float _x, float _y) : m_promien(promien), przylepiony(0), odleglosc_na_paletce(0)
 {
 	x = _x;
 	y = _y;
@@ -49,7 +50,12 @@ void cOkrag::resize(float dwidth, float dheight) //metoda zmieniajaca rozmiar ok
 }
 void cOkrag::ustaw_wlasciwosci()
 {
-	setGeometria(x, y, -m_promien, -m_promien, m_promien, m_promien);
-	setFizyka(9.811E-6F, -90);
-	setPredkosc(4e-2F, 60);
+	int kat = rand() % 21 + 40; //losowanie wartosci kata (od 40 do 60 stopni)
+
+	if ((rand() % 2) == 0) //losowanie kierunku poczatkowego kulki (w lewo lub w prawo)
+		setPredkosc(4e-2F, (float)kat); //kierunek w prawo
+	else setPredkosc(4e-2F, (float)180 - kat); //kierunek w lewo
+
+	setGeometria(x, y, -m_promien, -m_promien, m_promien, m_promien); //ustawienie geometrii
+	setFizyka(9.811E-6F, -90); //ustawienie fizyki
 }

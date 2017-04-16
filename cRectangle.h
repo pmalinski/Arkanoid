@@ -17,6 +17,9 @@ public:
 	cRectangle(float width, float height, float _x, float _y, float _alpha, float _r, float _g, float _b);
 	virtual void rysuj(); //metoda rysujaca prostokat
 	virtual void resize(float dwidth, float dheight); //metoda zmieniajaca rozmiar prostokata
+	float zwroc_szerokosc() { return m_width; };
+	float zwroc_wysokosc() { return m_height; };
+	void ustaw_szerokosc(float szerokosc) { m_width = szerokosc; };
 };
 
 #endif

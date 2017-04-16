@@ -35,6 +35,7 @@ public:
 	void setPredkosc(float _v, float _alfa_v); //ustawia poczatkowa predkosc
 	void setFizyka(float _g, float _alfa_g); //ustawia poczatkowe przyspieszenie
 	void setGeometria(float _x, float _y, float _xa, float _ya, float _xb, float _yb);
+	void setGeometria_szerokosc(float _xa, float _xb);
 	virtual int Kolizja(CFizyka& X); //wykrywanie kolizji z innym obiektem (funkcja przekazuje 1 gdy jest kolizja 0 gdy brak)
 	int IsInRect(float _x, float _y, const CFizyka& X);//wykrywa czy dany punkt (_x,_y) znajduje sie wewnatrz pewnego kwadratu
 	float odleglosc(float _x, float _y, float _xa, float _ya, float _xb, float _yb);//wyznacza odleglosc od pewnej prostej przechodzacej przez 2 punkty
@@ -42,6 +43,7 @@ public:
 	void Reset(); //resetuje czas
 
 	bool ZwracajWidoczny();
+	void ustaw_widoczny(bool czy_widoczny) { widoczny = czy_widoczny; }; //setter pola widoczny
 };
 
 #endif

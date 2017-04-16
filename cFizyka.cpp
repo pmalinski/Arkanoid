@@ -82,6 +82,13 @@ void CFizyka::setGeometria(float _x, float _y, float _xa, float _ya, float _xb, 
 	Reset();
 }
 
+void CFizyka::setGeometria_szerokosc(float _xa, float _xb)
+{
+	granica.xa = _xa;
+	granica.xb = _xb;
+	Reset();
+}
+
 int CFizyka::Kolizja(CFizyka& X) //wykrywanie kolizji z innym obiektem (funkcja przekazuje 1 gdy jest kolizja 0 gdy brak)
 {
 	//jesli wystepuje kolizja to przynajmniej jeden z wierzcholkow musi zawierac sie wewnatrz
